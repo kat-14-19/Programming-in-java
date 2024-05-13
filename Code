@@ -1,0 +1,91 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+public class DeckOfCards {
+    private List<Card> cards;
+
+    public DeckOfCards() {
+        cards = new ArrayList<>();
+        initializeDeck();
+    }
+
+    private void initializeDeck() {
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                cards.add(new Card(rank, suit));
+            }
+        }
+    }
+
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
+    public void sort() {
+        Collections.sort(cards);
+    }
+
+    public Card drawRandomCard() {
+        if (cards.isEmpty()) {
+            return null; // No cards left in the deck
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(cards.size());
+        return cards.remove(randomIndex);
+    }
+
+    public static void main(String[] args) {
+        DeckOfCards deck = new DeckOfCards();
+        
+        // Shuffle the deck
+        deck.shuffle();
+
+        // Draw and print 5 random cards
+        System.out.println("Randomly drawn cards:");
+        for (int i = 0; i < 5; i++) {
+            Card card = deck.drawRandomCard();
+            System.out.println(card);
+        }
+
+        // Sort the deck
+        deck.sort();
+        System.out.println("\nSorted deck:");
+        for (Card card : deck.cards) {
+            System.out.println(card);
+        }
+    }
+}
+
+class Card implements Comparable<Card> {
+    private final Rank rank;
+    private final Suit suit;
+
+    public Card(Rank rank, Suit suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    @Override
+    public String toString() {
+        return rank + " of " + suit;
+    }
+
+    @Override
+    public int compareTo(Card other) {
+        int rankComparison = this.rank.ordinal() - other.rank.ordinal();
+        if (rankComparison != 0) {
+            return rankComparison;
+        }
+        return this.suit.ordinal() - other.suit.ordinal();
+    }
+}
+
+enum Rank {
+    ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
+}
+
+enum Suit {
+    CLUBS, DIAMONDS, HEARTS, SPADES
+}
